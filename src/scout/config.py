@@ -57,13 +57,14 @@ class Config:
         Local providers (ollama, or anything behind SCOUT_API_BASE) don't need
         a key, so we skip the check for those.
         """
-        if self.api_base or self.provider == "ollama":
+        if self.api_base or self.provider in {"ollama", "mock"}:
             return
 
         required = {
             "anthropic": "ANTHROPIC_API_KEY",
             "openai": "OPENAI_API_KEY",
             "gemini": "GEMINI_API_KEY",
+            "groq": "GROQ_API_KEY",
         }.get(self.provider)
 
         if required and not os.getenv(required):

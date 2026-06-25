@@ -50,6 +50,11 @@ class LLM:
         self.console = console or Console()
 
     def _complete(self, messages: list[dict[str, Any]], tools: list[Tool] | None) -> Any:
+        if self.config.provider == "mock":
+            from .mock import mock_complete
+
+            return mock_complete(messages, tools)
+
         kwargs: dict[str, Any] = {
             "model": self.config.model,
             "messages": messages,

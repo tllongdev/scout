@@ -33,6 +33,8 @@ def discover_all(api_base: str | None = None) -> list[ProviderModels]:
         results.append(_openai())
     if os.getenv("GEMINI_API_KEY"):
         results.append(_gemini())
+    if os.getenv("GROQ_API_KEY"):
+        results.append(_groq())
 
     # Local / self-hosted. Prefer an explicit SCOUT_API_BASE; otherwise try the
     # default Ollama port on the host.
@@ -80,6 +82,35 @@ def _openai() -> ProviderModels:
         return ProviderModels("openai", [f"openai/{i}" for i in sorted(chat)])
     except Exception as exc:  # noqa: BLE001
         return ProviderModels("openai", [], note=f"lookup failed: {exc}")
+
+
+def _groq() -> ProviderModels:
+    """Groq's free tier (no credit card) - OpenAI-compatible, fast, open models."""
+    try:
+        resp = httpx.get(
+            "https://api.groq.com/openai/v1/models",
+            headers={"Authorization": f"Bearer {os.environ['GROQ_API_KEY']}"},
+            timeout=_TIMEOUT,
+        )
+        resp.raise_for_status()
+        ids = [m["id"] for m in resp.json().get("data", [])]
+        # Drop non-chat models and the agentic 'compound' systems, which don't
+        # accept caller-provided tools (Scout relies on its own tool schemas).
+        chat = [
+            i
+            for i in ids
+            if not any(
+                x in i.lower()
+                for x in ("whisper", "tts", "guard", "compound", "embed")
+            )
+        ]
+        return ProviderModels(
+            "groq (free tier)",
+            [f"groq/{i}" for i in sorted(chat)],
+            note="free, no credit card",
+        )
+    except Exception as exc:  # noqa: BLE001
+        return ProviderModels("groq", [], note=f"lookup failed: {exc}")
 
 
 def _gemini() -> ProviderModels:

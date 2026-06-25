@@ -26,6 +26,11 @@ _HELP = """Usage:
   scout "<mission brief>"     Run a collection mission
   scout models               List the models available to your credentials
   scout help                 Show this help
+
+Try it with no API key:
+  SCOUT_MODEL=mock scout "<mission brief>"   Run the full pipeline with a
+                                             scripted demo model (no key, no
+                                             cost; findings are illustrative)
 """
 
 
@@ -162,20 +167,27 @@ def _interactive_pick_model(console: Console) -> bool:
     for pm in discovered:
         choices.extend(pm.models)
 
-    if not choices:
-        console.print(
-            "[yellow]Couldn't find any models.[/yellow] Set SCOUT_MODEL and a key "
-            "in your .env (see .env.example)."
-        )
-        return False
+    # Always offer the no-key demo model as a last option.
+    choices.append("mock")
 
-    _print_models(console, discovered)
+    if discovered:
+        _print_models(console, discovered)
+    else:
+        console.print(
+            "[yellow]No provider credentials found.[/yellow] You can still try the "
+            "demo model below, or add a key to your .env (see .env.example)."
+        )
 
     numbered = Table(show_header=True, header_style="bold", border_style="dim")
     numbered.add_column("#", justify="right")
     numbered.add_column("Model")
     for i, model in enumerate(choices, 1):
-        numbered.add_row(str(i), model)
+        label = (
+            "mock  [dim](demo - no key, scripted, illustrative findings)[/dim]"
+            if model == "mock"
+            else model
+        )
+        numbered.add_row(str(i), label)
     console.print(numbered)
 
     pick = IntPrompt.ask(
