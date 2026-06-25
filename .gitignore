@@ -1,0 +1,23 @@
+# Secrets
+.env
+
+# Mission output
+output/*
+!output/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

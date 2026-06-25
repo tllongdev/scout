@@ -1,0 +1,17 @@
+services:
+  scout:
+    build: .
+    image: scout:latest
+    env_file:
+      - .env
+    # Mount output to the host so collected intelligence persists.
+    volumes:
+      - ./output:/app/output
+      # Mount a directory of local documents for offline collection (optional).
+      - ./sources:/app/sources:ro
+    # Interactive: the agent can pause and ask you for credentials / access.
+    stdin_open: true
+    tty: true
+    # Lets the container reach a model running on your host (Ollama, vLLM...).
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
