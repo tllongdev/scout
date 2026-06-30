@@ -141,7 +141,7 @@ something that tool is built for.
 | Instaloader | social | Public Instagram profile metadata | `pip install instaloader` |
 | Toutatis ⚠ | social | Deep Instagram extraction (email/phone) | `pip install toutatis` + `TOUTATIS_SESSION_ID` |
 | subfinder | web recon | Fast passive subdomain enumeration | `subfinder` binary on PATH |
-| httpx | web recon | Probe hosts for liveness/title/tech | `httpx` binary on PATH |
+| httpx | web recon | Probe hosts for liveness/title/tech | ProjectDiscovery `httpx` binary (set `SCOUT_HTTPX_PATH` if it clashes with python `httpx[cli]`) |
 | SpiderFoot ⚠ | recon | All-in-one OSINT engine (200+ modules) | clone repo, set `SCOUT_SPIDERFOOT_PATH` |
 | geowifi | geolocation | Geolocate a WiFi BSSID/SSID | clone repo, set `SCOUT_GEOWIFI_PATH` |
 | Robin ⚠ | dark web | LLM-driven dark-web search (needs Tor) | `robin` on PATH |
