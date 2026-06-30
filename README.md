@@ -90,10 +90,13 @@ mission brief
 ┌──────────┐   decomposes the goal into focused collection tasks
 │ Planner  │   (reasons about web, APIs, local docs, and gated/offline sources)
 └────┬─────┘
-     │
-     ▼
-┌──────────┐   one agent per task, each with tools:
-│Collectors│   web_search · web_fetch · local_files · ask_human
+     │        ┌─ auto-detects usable OSINT tools for this run, and
+     ▼        │  flags relevant ones you haven't enabled yet
+┌──────────┐ ─┘
+│Collectors│   one agent per task, each with:
+│          │   core tools:  web_search · web_fetch · local_files · ask_human
+│          │   + 33 specialized OSINT tools (accounts, email, phone, social,
+│          │     recon, sanctions, crypto, news, geo...) - whichever are usable
 │          │   + records entities, relationships, observations as it goes
 └────┬─────┘
      │
@@ -105,6 +108,11 @@ mission brief
      ▼
   output/  →  findings.md · graph.html · graph.json · raw_documents.json
 ```
+
+The specialized tools are pluggable and discovered at startup (see
+[Tool library](#tool-library)): Scout only hands an agent the tools that are
+actually usable given your keys, packages, and binaries, and lists the relevant
+ones you could turn on.
 
 Nothing is off the table as a source - including material that isn't on the
 internet. When an agent needs credentials, access to a gated system, or
