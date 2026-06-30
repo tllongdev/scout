@@ -10,9 +10,23 @@ mission in plain English; Scout reasons about where the intelligence lives,
 sends a team of agents to collect it, maps what it finds into a graph, and
 hands back a sourced report.
 
-> A proof-of-concept for agentic data collection. Pull it, run it in Docker,
-> point it at a goal, and watch agents plan, search, read, ask you for help when
-> they're blocked, and assemble findings.
+- **Run it free, or bring your own model.** Scout is model-agnostic. Start on a
+  free no-credit-card tier (Groq, Google Gemini, or NVIDIA NIM) in ~2 minutes,
+  point it at a frontier key (Claude, GPT) for the richest results, or run it
+  fully offline against a local model.
+- **33 specialized OSINT tools, auto-detected.** Beyond web search and fetch,
+  Scout ships a pluggable library spanning accounts, email, phone, social,
+  domain/recon, sanctions screening, crypto, news, and more. It probes your
+  environment at startup and hands agents only the tools that are usable - and
+  tells you which relevant ones you could enable.
+- **Every source is fair game.** Web, APIs, your local documents, and gated or
+  offline knowledge - when an agent needs credentials or first-hand input, it
+  pauses and asks you in the terminal.
+
+> A working, self-hostable foundation for agentic data collection - not a
+> managed product. Pull it, run it in Docker, point it at a goal, and watch
+> agents plan, search, read, ask you for help when they're blocked, and assemble
+> a sourced report. Early and single-operator by design, but real.
 
 ## Get started free (about 2 minutes)
 
@@ -244,7 +258,8 @@ scout "Your mission here"
 
 ## Notes
 
-- This is a POC. Be a good citizen: respect site terms, rate limits, and the law.
+- This is an early, single-operator tool, not a hardened production service. Be
+  a good citizen: respect site terms, rate limits, and the law.
 - The `ask_human` flow makes Scout safe around credentials - it never invents
   secrets; it asks, and you can mask the input.
 - Graph quality scales with model quality. A frontier model produces noticeably
