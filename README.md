@@ -124,6 +124,10 @@ something that tool is built for.
 | web-check | web recon | DNS, SSL, headers, WHOIS, ports for a domain | nothing (free) |
 | Reddit (PullPush) | social | User history + search, incl. removed content | nothing (free) |
 | Data-broker opt-out | data hygiene | Removal links for people-search brokers | nothing (free) |
+| GDELT News | news | Near-real-time global news/event search | nothing (free) |
+| Telegram OSINT | social | Read public Telegram channel posts | nothing (free) |
+| Crypto Wallet Trace | crypto | BTC/ETH balance + activity via explorers | nothing (free) |
+| NVD CVE Lookup | cyber | CVEs by id or product keyword (CVSS) | nothing (free) |
 | Scrapling | web recon | Anti-bot / stealth scraping | `pip install scrapling` |
 | GeoCLIP | geolocation | Open-source image → GPS, offline | `pip install geoclip` |
 | image-matching-webui | imagery | Feature-match two images to corroborate scenes | `pip install imcui` |
@@ -145,6 +149,7 @@ something that tool is built for.
 | SpiderFoot ⚠ | recon | All-in-one OSINT engine (200+ modules) | clone repo, set `SCOUT_SPIDERFOOT_PATH` |
 | geowifi | geolocation | Geolocate a WiFi BSSID/SSID | clone repo, set `SCOUT_GEOWIFI_PATH` |
 | Robin ⚠ | dark web | LLM-driven dark-web search (needs Tor) | `robin` on PATH |
+| OpenSanctions | sanctions | Screen names vs OFAC SDN / PEP / watchlists | `OPENSANCTIONS_API_KEY` (free for journalists/NGOs) |
 | Grayhat Warfare ⚠ | exposure | Search exposed S3/Azure/GCS buckets | `GRAYHAT_API_KEY` |
 | FaceCheck.ID ⚠ | facial recognition | Reverse face search (paid) | `FACECHECK_API_TOKEN` |
 | GeoSpy ⚠ | geolocation | AI photo geolocation (commercial) | `GEOSPY_API_KEY` |
