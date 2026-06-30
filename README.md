@@ -26,6 +26,9 @@ No paid account, no credit card. Scout runs on free model tiers. You need
   starts with `gsk_`).
 - **Google Gemini**: open [aistudio.google.com/apikey](https://aistudio.google.com/apikey),
   sign in, click **Create API key**, and copy it.
+- **NVIDIA NIM**: open [build.nvidia.com](https://build.nvidia.com), make a free
+  developer account (no card), and copy your `nvapi-` key. Gives you DeepSeek and
+  80+ other models.
 
 **2. Get the code and config file:**
 
@@ -46,6 +49,10 @@ GROQ_API_KEY=gsk_paste_your_key_here
 # Or if you used Gemini instead:
 # SCOUT_MODEL=gemini/gemini-2.5-flash
 # GEMINI_API_KEY=paste_your_key_here
+
+# Or if you used NVIDIA instead (DeepSeek with tool calling):
+# SCOUT_MODEL=nvidia_nim/deepseek-ai/deepseek-v3.2-exp
+# NVIDIA_NIM_API_KEY=nvapi-paste_your_key_here
 ```
 
 **4. Run your first mission:**
@@ -153,13 +160,14 @@ hardware. Set this in `.env`:
 |------------------------|------------------------------|-----------------------------------------------------------|
 | **Nothing - want a free real model** | **`groq/llama-3.3-70b-versatile`** | **`GROQ_API_KEY`** (free, no card) |
 | A free Gemini key        | `gemini/gemini-2.5-flash`     | `GEMINI_API_KEY` (free tier)                             |
+| A free NVIDIA key        | `nvidia_nim/deepseek-ai/deepseek-v3.2-exp` | `NVIDIA_NIM_API_KEY` (free, no card) |
 | A Claude / Anthropic key | `anthropic/claude-sonnet-4-6` (or `anthropic/claude-opus-4-8`) | `ANTHROPIC_API_KEY`                  |
 | An OpenAI key            | `openai/gpt-5.5`              | `OPENAI_API_KEY`                                          |
 | Qwen on your home server (Ollama) | `ollama/qwen2.5:14b` | `SCOUT_API_BASE=http://host.docker.internal:11434`        |
 | Any OpenAI-compatible server (vLLM, LM Studio, TGI) | `openai/<name>` | `SCOUT_API_BASE=http://host.docker.internal:8000/v1`      |
 | Just want to see it run offline | `mock` | nothing (no key, scripted output) |
 
-Free tiers (Groq, Gemini) are rate-limited but plenty for a test mission - see
+Free tiers (Groq, Gemini, NVIDIA NIM) are rate-limited but plenty for a test mission - see
 [Get started free](#get-started-free-about-2-minutes) above for the 2-minute
 setup. For heavy runs, use a paid or local model. The `mock` option runs the
 full pipeline with scripted output and needs no key at all.

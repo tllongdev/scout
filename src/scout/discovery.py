@@ -35,6 +35,8 @@ def discover_all(api_base: str | None = None) -> list[ProviderModels]:
         results.append(_gemini())
     if os.getenv("GROQ_API_KEY"):
         results.append(_groq())
+    if os.getenv("NVIDIA_NIM_API_KEY"):
+        results.append(_nvidia_nim())
 
     # Local / self-hosted. Prefer an explicit SCOUT_API_BASE; otherwise try the
     # default Ollama port on the host.
@@ -111,6 +113,31 @@ def _groq() -> ProviderModels:
         )
     except Exception as exc:  # noqa: BLE001
         return ProviderModels("groq", [], note=f"lookup failed: {exc}")
+
+
+def _nvidia_nim() -> ProviderModels:
+    """NVIDIA NIM free tier (no credit card) - OpenAI-compatible, 80+ models."""
+    try:
+        resp = httpx.get(
+            "https://integrate.api.nvidia.com/v1/models",
+            headers={"Authorization": f"Bearer {os.environ['NVIDIA_NIM_API_KEY']}"},
+            timeout=_TIMEOUT,
+        )
+        resp.raise_for_status()
+        ids = [m["id"] for m in resp.json().get("data", [])]
+        # Drop non-chat models (embeddings/rerank/retrieval/vision-only).
+        chat = [
+            i
+            for i in ids
+            if not any(x in i.lower() for x in ("embed", "rerank", "retrieval"))
+        ]
+        return ProviderModels(
+            "nvidia_nim (free tier)",
+            [f"nvidia_nim/{i}" for i in sorted(chat)],
+            note="free, no credit card; ~40 req/min",
+        )
+    except Exception as exc:  # noqa: BLE001
+        return ProviderModels("nvidia_nim", [], note=f"lookup failed: {exc}")
 
 
 def _gemini() -> ProviderModels:

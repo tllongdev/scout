@@ -65,6 +65,7 @@ class Config:
             "openai": "OPENAI_API_KEY",
             "gemini": "GEMINI_API_KEY",
             "groq": "GROQ_API_KEY",
+            "nvidia_nim": "NVIDIA_NIM_API_KEY",
         }.get(self.provider)
 
         if required and not os.getenv(required):
