@@ -6,12 +6,19 @@ from ..registry import register
 from . import (
     account_tools,
     darkweb_tools,
+    domain_tools,
+    email_tools,
     geo_tools,
     http_tools,
+    instagram_tools,
+    phone_tools,
     recon_tools,
     reddit_tools,
     scraping_tools,
     scrub_tools,
+    spiderfoot_tools,
+    surface_tools,
+    username_tools,
 )
 
 for _module in (
@@ -20,7 +27,14 @@ for _module in (
     scraping_tools,
     geo_tools,
     account_tools,
+    username_tools,
+    email_tools,
+    phone_tools,
+    domain_tools,
+    instagram_tools,
+    surface_tools,
     recon_tools,
+    spiderfoot_tools,
     darkweb_tools,
     scrub_tools,
 ):

@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from rich.console import Console
+from rich.markup import escape
 from rich.rule import Rule
 
 from .agents.collector import run_collector
@@ -45,8 +46,10 @@ class Orchestrator:
             )
             for s in mission.tool_suggestions:
                 self.console.print(
-                    f"  [yellow]·[/yellow] [bold]{s.name}[/bold] - {s.summary}\n"
-                    f"      [dim]{s.why} → to enable: {s.how_to_enable}[/dim]"
+                    f"  [yellow]·[/yellow] [bold]{escape(s.name)}[/bold] - "
+                    f"{escape(s.summary)}\n"
+                    f"      [dim]{escape(s.why)} → to enable: "
+                    f"{escape(s.how_to_enable)}[/dim]"
                 )
 
         # ── Collect ───────────────────────────────────────────────────────

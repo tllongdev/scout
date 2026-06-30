@@ -131,6 +131,18 @@ something that tool is built for.
 | BBOT ⚠ | recon | Recursive attack-surface / subdomain recon | `pip install bbot` |
 | GHunt | accounts | Google account footprint from an email | `pip install ghunt` + login |
 | tookie-osint | accounts | Username → accounts across many sites | clone repo, set `SCOUT_TOOKIE_PATH` |
+| maigret | accounts | Deep username dossier (3,000+ sites, profile parsing) | `pip install maigret` |
+| Blackbird | accounts | Fast username/email search (WhatsMyName, 600+ sites) | clone repo, set `SCOUT_BLACKBIRD_PATH` |
+| holehe | email | Which of 120+ sites an email is registered on | `pip install holehe` |
+| theHarvester | email | Emails/names/subdomains for a domain | `pip install theHarvester` |
+| PhoneInfoga | phone | Phone-number validation + footprint | `phoneinfoga` binary on PATH |
+| dnstwist | web recon | Typosquat / lookalike / phishing domains | `pip install dnstwist` |
+| Photon | web recon | Crawl a site for emails/handles/links/secrets | clone repo, set `SCOUT_PHOTON_PATH` |
+| Instaloader | social | Public Instagram profile metadata | `pip install instaloader` |
+| Toutatis ⚠ | social | Deep Instagram extraction (email/phone) | `pip install toutatis` + `TOUTATIS_SESSION_ID` |
+| subfinder | web recon | Fast passive subdomain enumeration | `subfinder` binary on PATH |
+| httpx | web recon | Probe hosts for liveness/title/tech | `httpx` binary on PATH |
+| SpiderFoot ⚠ | recon | All-in-one OSINT engine (200+ modules) | clone repo, set `SCOUT_SPIDERFOOT_PATH` |
 | geowifi | geolocation | Geolocate a WiFi BSSID/SSID | clone repo, set `SCOUT_GEOWIFI_PATH` |
 | Robin ⚠ | dark web | LLM-driven dark-web search (needs Tor) | `robin` on PATH |
 | Grayhat Warfare ⚠ | exposure | Search exposed S3/Azure/GCS buckets | `GRAYHAT_API_KEY` |

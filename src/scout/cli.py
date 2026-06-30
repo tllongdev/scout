@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 from rich.console import Console
+from rich.markup import escape
 from rich.panel import Panel
 from rich.prompt import IntPrompt, Prompt
 from rich.table import Table
@@ -124,9 +125,9 @@ def _cmd_tools(console: Console) -> int:
         elif d.available:
             mark, status = "[yellow]○[/yellow]", "available (disabled)"
         else:
-            mark, status = "[dim]·[/dim]", d.reason
-        name = d.spec.name + (" [red]⚠[/red]" if d.spec.sensitive else "")
-        table.add_row(mark, name, d.spec.category, d.spec.summary, status)
+            mark, status = "[dim]·[/dim]", escape(d.reason)
+        name = escape(d.spec.name) + (" [red]⚠[/red]" if d.spec.sensitive else "")
+        table.add_row(mark, name, d.spec.category, escape(d.spec.summary), status)
 
     console.print(table)
     console.print(

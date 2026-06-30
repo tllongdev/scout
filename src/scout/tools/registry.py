@@ -18,7 +18,7 @@ import importlib.util
 import os
 import shutil
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from rich.console import Console
 
@@ -52,6 +52,7 @@ class ToolSpec:
     any_env_keys: tuple[str, ...] = ()   # at least one of these must be set
     import_check: str | None = None      # this module must be importable
     binary_check: str | None = None      # this executable must be on PATH
+    probe: Callable[[], tuple[bool, str]] | None = None  # custom final check
     keyless: bool = False                # no creds needed (informational)
     sensitive: bool = False              # legal/ethical weight - flagged in UI
     install_hint: str = ""               # how to make it available
@@ -71,6 +72,10 @@ class ToolSpec:
         if self.binary_check and shutil.which(self.binary_check) is None:
             hint = self.install_hint or f"install '{self.binary_check}' on PATH"
             return False, hint
+        if self.probe is not None:
+            ok, reason = self.probe()
+            if not ok:
+                return False, reason or self.install_hint
         return True, "ready"
 
 
