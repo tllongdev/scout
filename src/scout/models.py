@@ -84,6 +84,16 @@ class Finding(BaseModel):
     supporting_sources: list[str] = Field(default_factory=list)
 
 
+class ToolSuggestion(BaseModel):
+    """An unconfigured tool that looks relevant to the mission, plus how to enable it."""
+
+    tool_id: str
+    name: str
+    summary: str
+    why: str          # what in the mission implied it
+    how_to_enable: str  # the action the operator must take
+
+
 class Mission(BaseModel):
     """The full state of a collection run."""
 
@@ -96,6 +106,7 @@ class Mission(BaseModel):
     observations: list[Observation] = Field(default_factory=list)
     raw_documents: list[RawDocument] = Field(default_factory=list)
     findings: list[Finding] = Field(default_factory=list)
+    tool_suggestions: list[ToolSuggestion] = Field(default_factory=list)
     summary: str = ""
 
     # ── mutation helpers (merge-by-name so agents don't create duplicates) ──

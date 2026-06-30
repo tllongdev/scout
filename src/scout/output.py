@@ -107,6 +107,18 @@ def _render_report(mission: Mission) -> str:
     else:
         lines.append("_None._")
 
+    if mission.tool_suggestions:
+        lines.append("\n## Tools That Could Deepen This Mission\n")
+        lines.append(
+            "These specialized tools look relevant but weren't enabled for this "
+            "run. Enable them and re-run to collect more:\n"
+        )
+        for s in mission.tool_suggestions:
+            lines.append(f"- **{s.name}** - {s.summary}")
+            lines.append(f"  - Why: {s.why}")
+            lines.append(f"  - To enable: {s.how_to_enable}")
+        lines.append("")
+
     lines.append("\n## Tasks Executed\n")
     for task in mission.tasks:
         flag = " 🧑 needs-human" if task.needs_human else ""

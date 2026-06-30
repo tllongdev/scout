@@ -17,6 +17,24 @@ dependencies = [
     "python-dotenv>=1.0.0",
 ]
 
+[project.optional-dependencies]
+# Optional OSINT tool integrations. Install only what you need; Scout detects
+# what's available at runtime and exposes those tools to the agents.
+scraping = ["scrapling>=0.2.9"]
+geo = ["geoclip>=1.2.0"]
+recon = ["bbot>=2.0.0"]
+accounts = ["ghunt>=2.0.0"]
+scrub = ["presidio-analyzer>=2.2.0", "presidio-anonymizer>=2.2.0"]
+# Everything pip-installable in one go (heavy: pulls torch via geoclip).
+osint = [
+    "scrapling>=0.2.9",
+    "geoclip>=1.2.0",
+    "bbot>=2.0.0",
+    "ghunt>=2.0.0",
+    "presidio-analyzer>=2.2.0",
+    "presidio-anonymizer>=2.2.0",
+]
+
 [project.scripts]
 scout = "scout.cli:main"
 

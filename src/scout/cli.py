@@ -25,6 +25,8 @@ _BANNER = r"""
 _HELP = """Usage:
   scout "<mission brief>"     Run a collection mission
   scout models               List the models available to your credentials
+  scout tools                List OSINT tools and whether each is available
+  scout discover [query]     Find top OSINT tool repos on GitHub (new candidates)
   scout help                 Show this help
 
 Try it with no API key:
@@ -46,8 +48,97 @@ def main() -> int:
         return 0
     if command == "models":
         return _cmd_models(console)
+    if command == "tools":
+        return _cmd_tools(console)
+    if command == "discover":
+        return _cmd_discover(console, args[1:])
 
     return _cmd_run(console, args)
+
+
+# ── `scout discover` ───────────────────────────────────────────────────────
+
+
+def _cmd_discover(console: Console, args: list[str]) -> int:
+    from .tools.github_discovery import discover_github_osint
+
+    query = " ".join(args).strip() or None
+    with console.status("Searching GitHub for top OSINT tools..."):
+        repos, error = discover_github_osint(query=query)
+
+    if not repos:
+        console.print(f"[yellow]No results.[/yellow] {error or ''}".strip())
+        return 1
+
+    table = Table(
+        title="[bold]Top OSINT repos on GitHub[/bold]"
+        + (f" [dim](query: {query})[/dim]" if query else ""),
+        title_justify="left",
+        border_style="cyan",
+    )
+    table.add_column("", justify="center")
+    table.add_column("Repo")
+    table.add_column("Stars", justify="right")
+    table.add_column("Updated", style="dim")
+    table.add_column("Description")
+
+    for r in repos:
+        mark = "[green]✓[/green]" if r.integrated else ""
+        stars = f"{r.stars / 1000:.1f}k" if r.stars >= 1000 else str(r.stars)
+        desc = (r.description[:70] + "…") if len(r.description) > 70 else r.description
+        table.add_row(mark, r.full_name, stars, r.pushed_at, desc)
+
+    console.print(table)
+    console.print(
+        "\n[dim][green]✓[/green] already integrated in Scout. Others are "
+        "candidates - wrap one by adding a ToolSpec under "
+        "src/scout/tools/osint/.[/dim]"
+    )
+    if error:
+        console.print(f"[dim]Note: {error}[/dim]")
+    return 0
+
+
+# ── `scout tools` ──────────────────────────────────────────────────────────
+
+
+def _cmd_tools(console: Console) -> int:
+    from .tools.registry import discover_tools
+
+    discovered = discover_tools()
+    table = Table(
+        title="[bold]OSINT tool library[/bold]",
+        title_justify="left",
+        border_style="cyan",
+        show_lines=False,
+    )
+    table.add_column("", justify="center")
+    table.add_column("Tool")
+    table.add_column("Category", style="dim")
+    table.add_column("What it's for")
+    table.add_column("Status", style="dim")
+
+    for d in sorted(discovered, key=lambda x: (not x.available, x.spec.category)):
+        if d.enabled:
+            mark, status = "[green]●[/green]", "[green]ready[/green]"
+        elif d.available:
+            mark, status = "[yellow]○[/yellow]", "available (disabled)"
+        else:
+            mark, status = "[dim]·[/dim]", d.reason
+        name = d.spec.name + (" [red]⚠[/red]" if d.spec.sensitive else "")
+        table.add_row(mark, name, d.spec.category, d.spec.summary, status)
+
+    console.print(table)
+    console.print(
+        "\n[dim][green]●[/green] active in missions · [yellow]○[/yellow] available "
+        "but disabled · · needs setup · [red]⚠[/red] sensitive (legal/ethical "
+        "weight)[/dim]"
+    )
+    console.print(
+        "[dim]Enable a subset with SCOUT_TOOLS=id1,id2 · turn some off with "
+        "SCOUT_DISABLE_TOOLS=id1,id2[/dim]"
+    )
+    return 0
 
 
 # ── `scout models` ─────────────────────────────────────────────────────────

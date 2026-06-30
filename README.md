@@ -89,6 +89,53 @@ Nothing is off the table as a source - including material that isn't on the
 internet. When an agent needs credentials, access to a gated system, or
 first-hand knowledge, it **pauses and asks you** right in the terminal.
 
+## Tool library
+
+Beyond web search and fetch, Scout ships a pluggable library of specialized
+OSINT tools. At mission start it **auto-detects which tools are usable** - based
+on the keys, packages, and binaries you have - and hands only those to the
+agents (same idea as model discovery). Run `scout tools` to see live status.
+
+Keyless tools work out of the box; the rest light up when you add a key, install
+an extra (`pip install "scout[osint]"`), or point Scout at a cloned repo.
+
+If a mission would clearly benefit from a tool you haven't enabled, Scout
+**tells you** - at the start of the run and in the report it lists the relevant
+unconfigured tools and the exact step to turn each one on.
+
+Looking for more tools to add? `scout discover` queries GitHub for the
+top-starred OSINT repos and flags which Scout already integrates, so you can
+spot strong new candidates to wrap into the registry (`scout discover phone` to
+focus the search). The agents themselves
+work the mission by every legitimate means (reasoning, web search/fetch, reading
+your files, asking you), and reach for a specialized tool whenever the task is
+something that tool is built for.
+
+| Tool | Category | What it's for | Needs |
+|---|---|---|---|
+| airplanes.live | aviation | Live ADS-B flight tracking (incl. military) | nothing (free) |
+| web-check | web recon | DNS, SSL, headers, WHOIS, ports for a domain | nothing (free) |
+| Reddit (PullPush) | social | User history + search, incl. removed content | nothing (free) |
+| Data-broker opt-out | data hygiene | Removal links for people-search brokers | nothing (free) |
+| Scrapling | web recon | Anti-bot / stealth scraping | `pip install scrapling` |
+| GeoCLIP | geolocation | Open-source image → GPS, offline | `pip install geoclip` |
+| image-matching-webui | imagery | Feature-match two images to corroborate scenes | `pip install imcui` |
+| Presidio | data hygiene | Redact PII from collected text | `pip install presidio-analyzer` |
+| BBOT ⚠ | recon | Recursive attack-surface / subdomain recon | `pip install bbot` |
+| GHunt | accounts | Google account footprint from an email | `pip install ghunt` + login |
+| tookie-osint | accounts | Username → accounts across many sites | clone repo, set `SCOUT_TOOKIE_PATH` |
+| geowifi | geolocation | Geolocate a WiFi BSSID/SSID | clone repo, set `SCOUT_GEOWIFI_PATH` |
+| Robin ⚠ | dark web | LLM-driven dark-web search (needs Tor) | `robin` on PATH |
+| Grayhat Warfare ⚠ | exposure | Search exposed S3/Azure/GCS buckets | `GRAYHAT_API_KEY` |
+| FaceCheck.ID ⚠ | facial recognition | Reverse face search (paid) | `FACECHECK_API_TOKEN` |
+| GeoSpy ⚠ | geolocation | AI photo geolocation (commercial) | `GEOSPY_API_KEY` |
+| MarineTraffic / Kpler | maritime | Vessel tracking by MMSI/IMO (commercial) | `MARINETRAFFIC_API_KEY` |
+
+⚠ = carries legal/ethical/reputational weight (surveillance, facial recognition,
+exposed data, dark web). Use responsibly, lawfully, and within each service's
+terms. Control what's active with `SCOUT_TOOLS` / `SCOUT_DISABLE_TOOLS` (see
+`.env.example`).
+
 ## Bring your own model
 
 Scout ships no credentials. You choose the model and supply your own key, so it

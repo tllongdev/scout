@@ -14,6 +14,7 @@ from .config import Config
 from .llm import LLM
 from .models import Mission
 from .output import write_outputs
+from .tools.recommend import recommend_tools
 
 
 class Orchestrator:
@@ -34,6 +35,19 @@ class Orchestrator:
         for i, task in enumerate(tasks, 1):
             flag = " [yellow](may need you)[/yellow]" if task.needs_human else ""
             self.console.print(f"  [cyan]{i}.[/cyan] {task.objective}{flag}")
+
+        # ── Recommend tools the operator could enable to go deeper ──────────
+        mission.tool_suggestions = recommend_tools(mission)
+        if mission.tool_suggestions:
+            self.console.print(
+                "\n[bold yellow]Tools that could help this mission "
+                "(not enabled):[/bold yellow]"
+            )
+            for s in mission.tool_suggestions:
+                self.console.print(
+                    f"  [yellow]·[/yellow] [bold]{s.name}[/bold] - {s.summary}\n"
+                    f"      [dim]{s.why} → to enable: {s.how_to_enable}[/dim]"
+                )
 
         # ── Collect ───────────────────────────────────────────────────────
         for i, task in enumerate(tasks, 1):

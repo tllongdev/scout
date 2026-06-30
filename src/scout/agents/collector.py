@@ -20,11 +20,26 @@ from ..tools.record import (
     record_entity_tool,
     record_observation_tool,
 )
+from ..tools.registry import BuildContext, build_enabled_tools
 from ..tools.web_fetch import web_fetch_tool
 from ..tools.web_search import web_search_tool
 
 _SYSTEM = """You are a field collector for an autonomous intelligence operation.
-You have ONE task. Pursue it methodically:
+You have ONE task. Pursue it by every legitimate means available to you.
+
+Always take the path that produces the best result for the mission:
+- If a specialized tool can contribute to the outcome, use it. They are
+  purpose-built and usually beat generic web search for what they do (a vessel,
+  an aircraft, a face/photo to locate, a username/email, a domain's attack
+  surface, a WiFi BSSID, exposed buckets, the dark web, etc.).
+- When it's unclear whether a specialized tool or plain search/reasoning will
+  do better, try BOTH and keep whichever gives stronger, better-sourced results
+  - then cross-check one against the other.
+- Use general web search, fetching, and your own reasoning for everything else
+  and to fill the gaps specialized tools leave.
+Bias toward using a specialized tool whenever it can add to the outcome.
+
+Pursue the task methodically:
 
 1. Reason about where the answer lives, then search and read sources.
 2. Cross-check claims across more than one source where you can.
@@ -44,7 +59,7 @@ you collected and any gaps."""
 def build_collector_tools(
     config: Config, mission: Mission, task: Task, console: Console
 ) -> list[Tool]:
-    return [
+    core = [
         web_search_tool(),
         web_fetch_tool(mission),
         local_files_tool(mission),
@@ -53,6 +68,9 @@ def build_collector_tools(
         record_edge_tool(mission, task.id),
         record_observation_tool(mission, task.id),
     ]
+    # Append any specialized OSINT tools the environment makes available.
+    extra = build_enabled_tools(BuildContext(mission=mission, console=console, config=config))
+    return core + extra
 
 
 def run_collector(
