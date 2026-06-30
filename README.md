@@ -134,7 +134,6 @@ something that tool is built for.
 | Presidio | data hygiene | Redact PII from collected text | `pip install presidio-analyzer` |
 | BBOT ⚠ | recon | Recursive attack-surface / subdomain recon | `pip install bbot` |
 | GHunt | accounts | Google account footprint from an email | `pip install ghunt` + login |
-| tookie-osint | accounts | Username → accounts across many sites | clone repo, set `SCOUT_TOOKIE_PATH` |
 | maigret | accounts | Deep username dossier (3,000+ sites, profile parsing) | `pip install maigret` |
 | Blackbird | accounts | Fast username/email search (WhatsMyName, 600+ sites) | clone repo, set `SCOUT_BLACKBIRD_PATH` |
 | holehe | email | Which of 120+ sites an email is registered on | `pip install holehe` |

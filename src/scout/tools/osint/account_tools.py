@@ -1,58 +1,16 @@
-"""Account/identity OSINT: username enumeration and Google account footprinting."""
+"""Account/identity OSINT: Google account footprinting.
+
+Username enumeration lives in ``username_tools`` (maigret, Blackbird).
+"""
 
 from __future__ import annotations
 
-import os
 import subprocess
 from typing import Any
 
 from ...llm import Tool
 from ...models import Entity
 from ..registry import BuildContext, ToolSpec
-
-
-def _tookie(ctx: BuildContext) -> list[Tool]:
-    repo = os.environ["SCOUT_TOOKIE_PATH"]
-    mission = ctx.mission
-
-    def _handle(args: dict[str, Any]) -> str:
-        username = str(args.get("username", "")).strip()
-        if not username:
-            return "Error: 'username' is required."
-        script = os.path.join(repo, "brib.py")
-        if not os.path.exists(script):
-            return f"tookie-osint not found at {script}."
-        try:
-            proc = subprocess.run(
-                ["python3", "brib.py", "-u", username],
-                capture_output=True, text=True, timeout=300, cwd=repo,
-            )
-            out = (proc.stdout or proc.stderr).strip()
-        except Exception as exc:  # noqa: BLE001
-            return f"tookie-osint failed: {exc}"
-        mission.upsert_entity(
-            Entity(name=username, type="username", sources=["tookie-osint"])
-        )
-        return out[:8000] or "No accounts found."
-
-    return [
-        Tool(
-            name="username_search",
-            description=(
-                "Enumerate online accounts for a username across many sites using "
-                "tookie-osint. Records the username as an entity. Returns the list "
-                "of discovered profiles."
-            ),
-            parameters={
-                "type": "object",
-                "properties": {
-                    "username": {"type": "string", "description": "Username to hunt."}
-                },
-                "required": ["username"],
-            },
-            handler=_handle,
-        )
-    ]
 
 
 def _ghunt(ctx: BuildContext) -> list[Tool]:
@@ -96,18 +54,6 @@ def _ghunt(ctx: BuildContext) -> list[Tool]:
 
 
 SPECS = [
-    ToolSpec(
-        id="tookie",
-        name="tookie-osint",
-        category="accounts",
-        summary="Username -> accounts enumeration across many sites.",
-        builder=_tookie,
-        env_keys=("SCOUT_TOOKIE_PATH",),
-        install_hint="clone Alfredredbird/tookie-osint and set SCOUT_TOOKIE_PATH",
-        docs="https://github.com/Alfredredbird/tookie-osint",
-        keywords=("username", "handle", "alias", "screen name", "profile",
-                  "social media account", "online accounts"),
-    ),
     ToolSpec(
         id="ghunt",
         name="GHunt",
