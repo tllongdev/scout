@@ -126,7 +126,7 @@ on the keys, packages, and binaries you have - and hands only those to the
 agents (same idea as model discovery). Run `scout tools` to see live status.
 
 Keyless tools work out of the box; the rest light up when you add a key, install
-an extra (`pip install "scout[osint]"`), or point Scout at a cloned repo.
+an extra (`pip install "scout-osint[osint]"`), or point Scout at a cloned repo.
 
 If a mission would clearly benefit from a tool you haven't enabled, Scout
 **tells you** - at the start of the run and in the report it lists the relevant

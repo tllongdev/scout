@@ -158,7 +158,7 @@ SPECS = [
         summary="Open-source image -> GPS geolocation, offline.",
         builder=_geoclip,
         import_check="geoclip",
-        install_hint="pip install 'scout[geo]' (or: pip install geoclip)",
+        install_hint="pip install 'scout-osint[geo]' (or: pip install geoclip)",
         docs="https://github.com/VicenteVivan/geo-clip",
         keywords=("geolocate", "geolocation", "where was this photo",
                   "where was this taken", "location of this image", "photo location"),

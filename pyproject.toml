@@ -1,5 +1,5 @@
 [project]
-name = "scout"
+name = "scout-osint"
 version = "0.1.0"
 description = "A lightweight, containerized agentic intelligence collector. Give it a mission; it reasons, collects, and maps findings into a graph."
 readme = "README.md"

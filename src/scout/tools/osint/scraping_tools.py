@@ -69,7 +69,7 @@ SPECS = [
         summary="Anti-bot / stealth web scraping for protected pages.",
         builder=_scrapling,
         import_check="scrapling",
-        install_hint="pip install 'scout[scraping]' (or: pip install scrapling)",
+        install_hint="pip install 'scout-osint[scraping]' (or: pip install scrapling)",
         docs="https://github.com/D4Vinci/Scrapling",
         keywords=("cloudflare", "anti-bot", "blocked", "bot protection",
                   "javascript-heavy", "captcha", "scrape protected"),

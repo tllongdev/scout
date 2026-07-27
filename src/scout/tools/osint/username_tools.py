@@ -137,7 +137,7 @@ SPECS = [
         summary="Deep username dossier across 3,000+ sites with profile parsing.",
         builder=_maigret,
         import_check="maigret",
-        install_hint="pip install 'scout[accounts]' (or: pip install maigret)",
+        install_hint="pip install 'scout-osint[accounts]' (or: pip install maigret)",
         docs="https://github.com/soxoj/maigret",
         keywords=("username", "handle", "alias", "screen name", "profile",
                   "social media account", "online accounts", "dossier",
