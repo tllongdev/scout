@@ -14,9 +14,10 @@ hands back a sourced report.
   free no-credit-card tier (Groq, Google Gemini, or NVIDIA NIM) in ~2 minutes,
   point it at a frontier key (Claude, GPT) for the richest results, or run it
   fully offline against a local model.
-- **33 specialized OSINT tools, auto-detected.** Beyond web search and fetch,
-  Scout ships a pluggable library spanning accounts, email, phone, social,
-  domain/recon, sanctions screening, crypto, news, and more. It probes your
+- **37 specialized OSINT tools, auto-detected.** Beyond web search and fetch,
+  Scout ships a pluggable library spanning accounts, email, phone, social
+  (X/LinkedIn/Instagram/Reddit/Telegram), video transcripts, domain/recon,
+  sanctions screening, crypto, news, and more. It probes your
   environment at startup and hands agents only the tools that are usable - and
   tells you which relevant ones you could enable.
 - **Every source is fair game.** Web, APIs, your local documents, and gated or
@@ -95,8 +96,8 @@ mission brief
 ┌──────────┐ ─┘
 │Collectors│   one agent per task, each with:
 │          │   core tools:  web_search · web_fetch · local_files · ask_human
-│          │   + 33 specialized OSINT tools (accounts, email, phone, social,
-│          │     recon, sanctions, crypto, news, geo...) - whichever are usable
+│          │   + 37 specialized OSINT tools (accounts, email, phone, social,
+│          │     video, recon, sanctions, crypto, news, geo...) - if usable
 │          │   + records entities, relationships, observations as it goes
 └────┬─────┘
      │
@@ -165,6 +166,10 @@ something that tool is built for.
 | Photon | web recon | Crawl a site for emails/handles/links/secrets | clone repo, set `SCOUT_PHOTON_PATH` |
 | Instaloader | social | Public Instagram profile metadata | `pip install instaloader` |
 | Toutatis ⚠ | social | Deep Instagram extraction (email/phone) | `pip install toutatis` + `TOUTATIS_SESSION_ID` |
+| Sherlock | accounts | Quick username check across ~400 sites | `pip install sherlock-project` |
+| YouTube | video | Video transcripts, metadata, and search | `pip install yt-dlp` |
+| Twitter/X ⚠ | social | Read X profiles, posts, and search | `pip install agent-reach`, then `TWITTER_AUTH_TOKEN` + `TWITTER_CT0` |
+| LinkedIn ⚠ | social | Person/company profiles, people search | `pip install agent-reach`, then `uvx mcp-server-linkedin@latest --login` |
 | subfinder | web recon | Fast passive subdomain enumeration | `subfinder` binary on PATH |
 | httpx | web recon | Probe hosts for liveness/title/tech | ProjectDiscovery `httpx` binary (set `SCOUT_HTTPX_PATH` if it clashes with python `httpx[cli]`) |
 | SpiderFoot ⚠ | recon | All-in-one OSINT engine (200+ modules) | clone repo, set `SCOUT_SPIDERFOOT_PATH` |

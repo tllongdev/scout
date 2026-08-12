@@ -1,7 +1,7 @@
-"""Username enumeration: maigret (deep dossier) and Blackbird (fast/WhatsMyName).
+"""Username enumeration: maigret, Blackbird, and Sherlock.
 
-Two complementary tools - run either or both, since each catches accounts the
-other misses:
+Three complementary tools - run any of them, since each catches accounts the
+others miss:
 
 - ``maigret`` checks 3,000+ sites and parses profile pages to extract metadata
   and linked identifiers (recursive identity graph). Slower, deeper. Installed
@@ -9,12 +9,17 @@ other misses:
 - ``Blackbird`` is a fast async checker backed by the WhatsMyName database
   (600+ sites), covers username *and* email, and has a low false-positive rate.
   It is run from a cloned repo, so we invoke it by path.
+- ``Sherlock`` is the lightweight fallback: ~400 sites, a plain list of hits, no
+  profile parsing. maigret is a superset in coverage and depth, so Sherlock earns
+  its place only as a fast sanity check and as a second opinion when maigret is
+  unavailable or its site definitions have drifted.
 """
 
 from __future__ import annotations
 
 import os
 import subprocess
+import tempfile
 from typing import Any
 
 from ...llm import Tool
@@ -129,6 +134,56 @@ def _blackbird(ctx: BuildContext) -> list[Tool]:
     ]
 
 
+def _sherlock(ctx: BuildContext) -> list[Tool]:
+    mission = ctx.mission
+
+    def _handle(args: dict[str, Any]) -> str:
+        username = str(args.get("username", "")).strip().lstrip("@")
+        if not username:
+            return "Error: 'username' is required."
+        cmd = ["sherlock", username, "--print-found", "--no-color", "--timeout", "15"]
+        if args.get("include_nsfw"):
+            cmd.append("--nsfw")
+        # Older Sherlock builds write <username>.txt into the working directory,
+        # so run from a throwaway dir rather than polluting the mission cwd.
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                proc = subprocess.run(
+                    cmd, capture_output=True, text=True, timeout=420, cwd=tmp,
+                )
+                out = (proc.stdout or proc.stderr).strip()
+        except Exception as exc:  # noqa: BLE001
+            return f"Sherlock failed: {exc}"
+        mission.upsert_entity(
+            Entity(name=username, type="username", sources=["sherlock"])
+        )
+        return out[:8000] or "No accounts found."
+
+    return [
+        Tool(
+            name="sherlock_username",
+            description=(
+                "Quick username check across ~400 sites with Sherlock, returning a "
+                "plain list of found profile URLs. Fast and dependency-light. Prefer "
+                "maigret_username when you need depth or profile metadata; use this "
+                "for a fast sweep or a second opinion."
+            ),
+            parameters={
+                "type": "object",
+                "properties": {
+                    "username": {"type": "string", "description": "Username/handle to check."},
+                    "include_nsfw": {
+                        "type": "boolean",
+                        "description": "Include adult sites in the check (default false).",
+                    },
+                },
+                "required": ["username"],
+            },
+            handler=_handle,
+        )
+    ]
+
+
 SPECS = [
     ToolSpec(
         id="maigret",
@@ -154,5 +209,17 @@ SPECS = [
         docs="https://github.com/p1ngul1n0/blackbird",
         keywords=("username", "handle", "alias", "screen name", "profile",
                   "social media account", "online accounts", "whatsmyname"),
+    ),
+    ToolSpec(
+        id="sherlock",
+        name="Sherlock",
+        category="accounts",
+        summary="Lightweight username check across ~400 sites (fast fallback).",
+        builder=_sherlock,
+        import_check="sherlock_project",
+        install_hint="pip install 'scout-osint[accounts]' (or: pip install sherlock-project)",
+        docs="https://github.com/sherlock-project/sherlock",
+        keywords=("username", "handle", "alias", "screen name",
+                  "social media account", "online accounts"),
     ),
 ]

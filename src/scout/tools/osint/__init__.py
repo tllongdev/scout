@@ -5,6 +5,7 @@ from __future__ import annotations
 from ..registry import register
 from . import (
     account_tools,
+    agent_reach_tools,
     crypto_tools,
     darkweb_tools,
     domain_tools,
@@ -38,6 +39,7 @@ for _module in (
     phone_tools,
     domain_tools,
     instagram_tools,
+    agent_reach_tools,
     surface_tools,
     recon_tools,
     spiderfoot_tools,
